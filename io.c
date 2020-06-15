@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #define INPUT_FILE_EXIST_DIFF 3
 #define A_FLAG_ADDITION 2
 #define RANGE_PREFIX_LENGTH 1
@@ -11,6 +12,7 @@
 #define RANGE_EXPRESSION_LENGTH 5
 #define OR_PREFIX_LENGTH 1
 #define OR_EXPRESSION_LENGTH 3
+
 void target_string_parcer(char *input_string, regex_token **tokens_list, int *num_of_tokens);
 bool is_it_backslash(char input);
 bool is_it_dot(char input);
@@ -36,6 +38,7 @@ bool is_it_format_b_A(flags_switch *input_switch);
 bool is_it_format_A(flags_switch *input_switch);
 bool is_it_format_b(flags_switch *input_switch);
 bool is_it_format_n(flags_switch *input_switch);
+
 void target_string_parcer(char *input_string, regex_token **tokens_list, int *num_of_tokens)
 {
 	int cur_index = 0;
@@ -68,15 +71,20 @@ void target_string_parcer(char *input_string, regex_token **tokens_list, int *nu
 }
 
 enum token_tag current_tag_finder(regex_token *cur_token) { return cur_token->tag; }
+
 bool is_it_backslash(char input) { return (input == '\\'); }
+
 bool is_it_dot(char input) { return (input == '.'); }
+
 void dot_handler(regex_token *cur_token, int *cur_index)
 {
 	cur_token->tag = DOT;
 	cur_token->token_data.dot = true;
 	(*cur_index)++;
 }
+
 bool is_it_or(char input) { return (input == '('); }
+
 void or_handler(regex_token *cur_token, char *input_string, int *cur_index)
 {
 	int left_len = 0, right_len = 0;
@@ -100,7 +108,9 @@ void or_handler(regex_token *cur_token, char *input_string, int *cur_index)
 	int total_len = right_len + left_len + OR_EXPRESSION_LENGTH;
 	(*cur_index) = (*cur_index) + total_len;
 }
+
 bool is_it_range(char input) { return (input == '['); }
+
 void range_handler(regex_token *cur_token, char *input_string, int *cur_index)
 {
 	char *cur_ptr = input_string + (*cur_index) + RANGE_PREFIX_LENGTH;
@@ -112,6 +122,7 @@ void range_handler(regex_token *cur_token, char *input_string, int *cur_index)
 	cur_token->token_data.range.right_limit = right_limit;
 	(*cur_index) = (*cur_index) + RANGE_EXPRESSION_LENGTH;
 }
+
 void char_handler(regex_token *cur_token, char *input_string, int *cur_index)
 {
 	cur_token->tag = CHAR;
@@ -119,6 +130,7 @@ void char_handler(regex_token *cur_token, char *input_string, int *cur_index)
 	cur_token->token_data.c = cur_ptr[0];
 	(*cur_index)++;
 }
+
 void input_handler(char **arguments_array[], int array_size, flags_switch *new_switch, char **file_name,
 	regex_token **tokens_list, int *num_of_tokens, char **search_argument)
 {
@@ -177,6 +189,7 @@ void input_handler(char **arguments_array[], int array_size, flags_switch *new_s
 	target_string_parcer(*search_argument, tokens_list, num_of_tokens);
 	new_switch->num_of_flags = num_of_flags;
 }
+
 void switch_Initializing(flags_switch *new_switch)
 {
 	(new_switch)->a = false;
@@ -189,6 +202,7 @@ void switch_Initializing(flags_switch *new_switch)
 	(new_switch)->x = false;
 	(new_switch)->e = false;
 }
+
 void line_print(flags_switch *input_switch, char *cur_line, int cur_line_num, int char_count, int A_flag_lines_left)
 {
 	if (input_switch->c == true) {
@@ -219,6 +233,7 @@ void line_print(flags_switch *input_switch, char *cur_line, int cur_line_num, in
 		printf("%s", cur_line);
 	}
 }
+
 bool is_it_format_A(flags_switch *input_switch)
 {
 	if (input_switch->a == true && input_switch->n == false && input_switch->b == false) {
@@ -226,6 +241,7 @@ bool is_it_format_A(flags_switch *input_switch)
 	}
 	return false;
 }
+
 bool is_it_format_n(flags_switch *input_switch)
 {
 	if (input_switch->a == false && input_switch->n == true && input_switch->b == false) {
@@ -233,6 +249,7 @@ bool is_it_format_n(flags_switch *input_switch)
 	}
 	return false;
 }
+
 bool is_it_format_b(flags_switch *input_switch)
 {
 	if (input_switch->a == false && input_switch->n == false && input_switch->b == true) {
@@ -240,9 +257,13 @@ bool is_it_format_b(flags_switch *input_switch)
 	}
 	return false;
 }
+
 void Print_format_n(int cur_line_num, char *cur_line) { printf("%d:%s", cur_line_num, cur_line); }
+
 void Print_format_A(char *cur_line) { printf("%s", cur_line); }
+
 void Print_format_b(int char_count, char *cur_line) { printf("%d:%s", char_count, cur_line); }
+
 bool is_it_format_A_n(flags_switch *input_switch)
 {
 	if (input_switch->a == true && input_switch->n == true) {
@@ -250,6 +271,7 @@ bool is_it_format_A_n(flags_switch *input_switch)
 	}
 	return false;
 }
+
 void Print_format_A_n_b(flags_switch *input_switch, char *cur_line, int cur_line_num, int char_count,
 	int A_flag_lines_left)
 {
@@ -260,11 +282,13 @@ void Print_format_A_n_b(flags_switch *input_switch, char *cur_line, int cur_line
 		printf("%d-%d-%s", cur_line_num, char_count, cur_line);
 	}
 }
+
 void Print_format_n_b(char *cur_line, int cur_line_num, int char_count)
 {
 
 	printf("%d:%d:%s", cur_line_num, char_count, cur_line);
 }
+
 void Print_format_A_n(char *cur_line, int cur_line_num, int A_flag_lines_left, flags_switch *input_switch)
 {
 	if (input_switch->a_num == A_flag_lines_left) {
@@ -274,6 +298,7 @@ void Print_format_A_n(char *cur_line, int cur_line_num, int A_flag_lines_left, f
 		printf("%d-%s", cur_line_num, cur_line);
 	}
 }
+
 void Print_format_b_A(char *cur_line, int char_count, int A_flag_lines_left, flags_switch *input_switch)
 {
 	if (input_switch->a_num == A_flag_lines_left) {
@@ -283,6 +308,7 @@ void Print_format_b_A(char *cur_line, int char_count, int A_flag_lines_left, fla
 		printf("%d-%s", char_count, cur_line);
 	}
 }
+
 bool is_it_format_A_n_b(flags_switch *input_switch)
 {
 	if (input_switch->a == true && input_switch->n == true && input_switch->b == true) {
@@ -290,6 +316,7 @@ bool is_it_format_A_n_b(flags_switch *input_switch)
 	}
 	return false;
 }
+
 bool is_it_format_n_b(flags_switch *input_switch)
 {
 	if (input_switch->n == true && input_switch->b == true) {
@@ -297,6 +324,7 @@ bool is_it_format_n_b(flags_switch *input_switch)
 	}
 	return false;
 }
+
 bool is_it_format_b_A(flags_switch *input_switch)
 {
 	if (input_switch->b == true && input_switch->a == true) {
@@ -304,7 +332,9 @@ bool is_it_format_b_A(flags_switch *input_switch)
 	}
 	return false;
 }
+
 void lines_counter_print(int total_matched_lines) { printf("%d\n", total_matched_lines); }
+
 bool does_input_file_exist(char const *input_file)
 {
 	if (input_file != NULL) {
