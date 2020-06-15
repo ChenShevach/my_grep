@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 bool is_range_match(char cur_char, regex_range cur_range);
 bool is_char_match(char cur_char, char target_char);
 bool versus_flag_handler(flags_switch *input_switch, bool cur_result);
@@ -19,13 +20,16 @@ bool x_flag_handler(bool x, bool cur_result, bool satisfied_x_flag);
 bool is_x_satisfied(int line_len, int regex_len, int cur_index);
 void match_lines_counter_updater(int *total_matched_lines, int originial_A_num, int A_flag_lines_left);
 void print_seperation();
+
 bool is_range_match(char cur_char, regex_range cur_range)
 {
 	char left_limit = cur_range.left_limit;
 	char right_limit = cur_range.right_limit;
 	return ((cur_char >= left_limit) && (cur_char <= right_limit));
 }
+
 bool is_char_match(char cur_char, char target_char) { return cur_char == target_char; };
+
 bool versus_flag_handler(flags_switch *input_switch, bool cur_result)
 {
 	if (input_switch->v == false) {
@@ -38,6 +42,7 @@ bool versus_flag_handler(flags_switch *input_switch, bool cur_result)
 		return false;
 	}
 }
+
 bool is_match_at_place(char *input_line, regex_token *cur_token, int tokens_len, int cur_regex_len, int *regex_len)
 {
 	if (tokens_len == 0) {
@@ -94,6 +99,7 @@ bool is_match_at_place(char *input_line, regex_token *cur_token, int tokens_len,
 	}
 	return ERROR_CODE;
 }
+
 bool is_match_in_line(char *input_line, regex_token *tokens_array, int tokens_len, bool *satisfied_x_flag)
 {
 	int line_len = strlen(input_line) - 1, regex_len = 0;
@@ -105,6 +111,7 @@ bool is_match_in_line(char *input_line, regex_token *tokens_array, int tokens_le
 	}
 	return false;
 }
+
 bool need_to_print_line(char *input_line, flags_switch *input_switch, regex_token *tokens_array, int tokens_len,
 	int *A_flag_lines_left, bool *is_block_ended, bool *got_unmatched_line)
 {
@@ -127,6 +134,7 @@ bool need_to_print_line(char *input_line, flags_switch *input_switch, regex_toke
 	}
 	return result;
 }
+
 bool is_x_satisfied(int line_len, int regex_len, int cur_index)
 {
 	if (line_len == regex_len && cur_index == 0) {
@@ -134,6 +142,7 @@ bool is_x_satisfied(int line_len, int regex_len, int cur_index)
 	}
 	return false;
 }
+
 bool x_flag_handler(bool x, bool cur_result, bool satisfied_x_flag)
 {
 	if (x == false) {
@@ -143,6 +152,7 @@ bool x_flag_handler(bool x, bool cur_result, bool satisfied_x_flag)
 		return satisfied_x_flag;
 	}
 }
+
 void match_lines_handler(char *input_file, flags_switch *input_switch, regex_token *tokens_list, int num_of_tokens)
 {
 	int line_num = 0, total_matched_lines = 0, char_count = 0, A_flag_lines_left = 0;
@@ -190,10 +200,12 @@ void match_lines_handler(char *input_file, flags_switch *input_switch, regex_tok
 		fclose(file_ptr);
 	}
 }
+
 void match_lines_counter_updater(int *total_matched_lines, int originial_A_num, int A_flag_lines_left)
 {
 	if (originial_A_num == A_flag_lines_left) {
 		*total_matched_lines++;
 	}
 }
+
 void print_seperation() { printf("--\n"); }
